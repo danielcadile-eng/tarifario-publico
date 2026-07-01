@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excursiones en Mendoza — Campo Base</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand">
+        <img src="img/campo-base-blanco.png" alt="Campo Base" class="brand__logo">
+        <div class="brand__divider"></div>
+        <span class="brand__tag">Franquicia <img src="img/feliz-viaje.png" alt="Feliz Viaje" class="brand__logo-fv"></span>
+      </div>
+      <nav class="main-nav">
+        <a href="#excursiones" class="active">Excursiones</a>
+        <a href="#armador">Armá tu viaje</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero__inner">
+      <h1>Descubrí Mendoza con nosotros</h1>
+      <p>Excursiones receptivas desde el centro de Mendoza. Reservá directo con Campo Base.</p>
+      <a href="#excursiones" class="hero__cta">Ver excursiones</a>
+    </div>
+  </section>
+
+  <main>
+    <section id="excursiones" class="section">
+      <div class="section__inner">
+        <h2>Nuestras excursiones</h2>
+        <p class="section__intro">Todos los precios son por persona en efectivo o transferencia. Aceptamos tarjeta de crédito en hasta 3 cuotas.</p>
+
+        <div class="filters" id="filters">
+          <button class="filter-btn active" data-filter="todas">Todas</button>
+          <button class="filter-btn" data-filter="dia-completo">Día completo</button>
+          <button class="filter-btn" data-filter="medio-dia">Medio día</button>
+        </div>
+
+        <div id="excursiones-list" class="excursiones-list">
+          <!-- Generado por JS -->
+        </div>
+      </div>
+    </section>
+
+    <section id="armador" class="section section--alt">
+      <div class="section__inner">
+        <h2>Armá tu viaje</h2>
+        <p class="section__intro">Ingresá tu presupuesto total, las fechas y la cantidad de personas. Te armamos una propuesta de excursiones que aproveche mejor tu tiempo y dinero.</p>
+
+        <form id="armador-form" class="armador-form">
+          <div class="armador-form__row">
+            <div class="field">
+              <label for="presupuesto">Presupuesto total ($)</label>
+              <input type="number" id="presupuesto" min="1000" step="1000" required placeholder="Ej: 200000">
+            </div>
+            <div class="field">
+              <label for="personas">Cantidad de personas</label>
+              <input type="number" id="personas" min="1" max="50" required placeholder="Ej: 2">
+            </div>
+            <div class="field">
+              <label for="fecha-inicio">Fecha de llegada</label>
+              <input type="date" id="fecha-inicio" required>
+            </div>
+            <div class="field">
+              <label for="fecha-salida">Fecha de salida</label>
+              <input type="date" id="fecha-salida" required>
+            </div>
+          </div>
+          <button type="submit">Armar propuesta</button>
+        </form>
+
+        <button id="nueva-consulta-btn" class="nueva-consulta-btn" hidden>&#8592; Nueva consulta</button>
+        <div id="armador-resultado" class="armador-resultado"></div>
+      </div>
+    </section>
+
+    <section id="contacto" class="section">
+      <div class="section__inner">
+        <h2>Reservás con nosotros</h2>
+        <div id="contacto-info" class="contacto-info"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="anio"></span> Campo Base — Red Feliz Viaje · Peatonal Sarmiento 231, Mendoza</p>
+  </footer>
+
+  <!-- Modal de detalle -->
+  <div id="detalle-modal" class="modal" hidden>
+    <div class="modal__backdrop" id="modal-backdrop"></div>
+    <div class="modal__content" id="modal-content"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
