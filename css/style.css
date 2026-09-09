@@ -391,7 +391,7 @@ a { color: inherit; }
 .site-footer { text-align: center; padding: 24px; font-size: 12px; color: var(--texto-suave); }
 .acceso-agencias-link {
   display: inline-block;
-  margin-top: 6px;
+  margin-bottom: 6px;
   font-size: 11px;
   color: var(--texto-suave);
   text-decoration: none;
