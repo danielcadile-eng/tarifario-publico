@@ -1,0 +1,24 @@
+{
+  "escapadas": [
+    {
+      "id": "escapate-mendoza",
+      "nombre": "Escapate a Mendoza!",
+      "duracion": "3 NTS / TRF IN-OUT / EXCURSIONES",
+      "hoteleria": "Hostel 3 estrellas",
+      "incluye": ["Alta Montaña", "Bodegas y Oliva"],
+      "precio_publico": 350000,
+      "neto_agencia": 315000,
+      "comision_pct": 10
+    },
+    {
+      "id": "mansa-mendoza",
+      "nombre": "Mansa Mendoza!",
+      "duracion": "5 NTS / TRF IN-OUT / EXCURSIONES",
+      "hoteleria": "Hostel 3 estrellas",
+      "incluye": ["Alta Montaña", "Bodegas y Oliva", "Villavicencio", "Cañón del Atuel"],
+      "precio_publico": 650000,
+      "neto_agencia": 585000,
+      "comision_pct": 10
+    }
+  ]
+}

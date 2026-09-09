@@ -3,11 +3,15 @@
 
   var DATA_URL = "data/excursiones.json";
   var OFERTAS_URL = "data/ofertas.json";
+  var ESCAPADAS_URL = "data/escapadas.json";
+  var AGENCIAS_SESSION_KEY = "cb_agencias_unlocked";
 
   var data = null;
   var excursionesById = {};
   var propuestaActual = null;
   var clavesAgencias = [];
+  var agenciasDesbloqueado = false;
+  var agenciasFiltroActual = "todas";
 
   document.addEventListener("DOMContentLoaded", init);
 
@@ -15,10 +19,15 @@
     document.getElementById("anio").textContent = new Date().getFullYear();
     setupModal();
     setupAgenciasModal();
+    setupAgenciasFilters();
     setupFilters();
     setupArmadorForm();
     cargarDatos();
     cargarClavesAgencias();
+
+    if (sessionStorage.getItem(AGENCIAS_SESSION_KEY) === "1") {
+      desbloquearAgencias(false);
+    }
   }
 
   // ===================== CARGA DE DATOS =====================
@@ -35,6 +44,7 @@
         data.excursiones.forEach(function (ex) { excursionesById[ex.id] = ex; });
         renderExcursiones("todas");
         renderContacto();
+        if (agenciasDesbloqueado) renderTarifarioAgencias(agenciasFiltroActual);
       })
       .catch(function (err) {
         var list = document.getElementById("excursiones-list");
@@ -44,6 +54,12 @@
   }
 
   // ===================== HELPERS =====================
+
+  function calcularNeto(ex) {
+    var pub = ex.precios.efectivo_transferencia;
+    var pct = ex.comision_pct || 0;
+    return Math.round(pub * (1 - pct / 100));
+  }
 
   function formatoMoneda(n) {
     if (n === null || n === undefined) return "—";
@@ -121,6 +137,113 @@
     return card;
   }
 
+  // ===================== TARIFARIO AGENCIAS =====================
+
+  function setupAgenciasFilters() {
+    var filters = document.getElementById("agencias-filters");
+    filters.addEventListener("click", function (e) {
+      var btn = e.target.closest(".filter-btn");
+      if (!btn) return;
+      filters.querySelectorAll(".filter-btn").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      agenciasFiltroActual = btn.dataset.filter;
+      renderTarifarioAgencias(agenciasFiltroActual);
+    });
+  }
+
+  function renderTarifarioAgencias(filtro) {
+    if (!data) return;
+    var list = document.getElementById("agencias-excursiones-list");
+    list.innerHTML = "";
+    var excursiones = data.excursiones.filter(function (ex) {
+      return filtro === "todas" || ex.categoria === filtro;
+    });
+    excursiones.forEach(function (ex) {
+      list.appendChild(crearTarjetaExcursionAgencia(ex));
+    });
+  }
+
+  function crearTarjetaExcursionAgencia(ex) {
+    var card = document.createElement("div");
+    card.className = "excursion-card";
+    card.tabIndex = 0;
+    card.addEventListener("click", function () { mostrarDetalle(ex.id); });
+
+    var badge = ex.categoria === "dia-completo" ? "Día completo" : "Medio día";
+    var neto = calcularNeto(ex);
+
+    var promoHtml = "—";
+    if (ex.precios.promo) {
+      promoHtml = '<span class="precio-item__valor promo">' + formatoMoneda(ex.precios.promo.precio) + '</span>';
+    }
+
+    var tarjetaHtml = "";
+    if (ex.precios.tarjeta && ex.precios.tarjeta.precio) {
+      tarjetaHtml = formatoMoneda(ex.precios.tarjeta.precio);
+      if (ex.precios.tarjeta.cuotas) tarjetaHtml += ' (' + ex.precios.tarjeta.cuotas + ' cuotas)';
+    } else {
+      tarjetaHtml = "—";
+    }
+
+    card.innerHTML =
+      '<div class="excursion-card__top">' +
+        '<div class="excursion-card__nombre">' + escapeHtml(ex.nombre) + '</div>' +
+        '<div class="excursion-card__badge">' + badge + '</div>' +
+      '</div>' +
+      '<div class="excursion-card__meta">' + escapeHtml(ex.salidas) + ' · ' + escapeHtml(ex.horario) + '</div>' +
+      '<div class="excursion-card__precios">' +
+        '<div class="precio-item"><span class="precio-item__label">Efectivo/Transf.</span><span class="precio-item__valor">' + formatoMoneda(ex.precios.efectivo_transferencia) + '</span></div>' +
+        '<div class="precio-item"><span class="precio-item__label">Promo</span>' + promoHtml + '</div>' +
+        '<div class="precio-item"><span class="precio-item__label">Tarjeta</span><span class="precio-item__valor">' + tarjetaHtml + '</span></div>' +
+        '<div class="precio-item"><span class="precio-item__label">Comisión</span><span class="precio-item__valor">' + ex.comision_pct + '%</span></div>' +
+      '</div>' +
+      '<div class="excursion-card__neto"><span class="label">Neto agencia</span><span class="valor">' + formatoMoneda(neto) + '</span></div>';
+
+    return card;
+  }
+
+  function renderEscapadas(escapadas) {
+    var list = document.getElementById("escapadas-list");
+    if (!list || !escapadas || !escapadas.length) return;
+    list.innerHTML = "";
+    escapadas.forEach(function (esc) {
+      var excItems = esc.incluye.map(function (e) {
+        return '<li>' + escapeHtml(e) + '</li>';
+      }).join("");
+      var card = document.createElement("div");
+      card.className = "escapada-card";
+      card.innerHTML =
+        '<div class="escapada-card__header">' +
+          '<div class="escapada-card__nombre">' + escapeHtml(esc.nombre) + '</div>' +
+          '<div class="escapada-card__duracion">' + escapeHtml(esc.duracion) + '</div>' +
+        '</div>' +
+        '<div class="escapada-card__body">' +
+          '<div class="escapada-card__hoteleria"><strong>Hotelería:</strong> ' + escapeHtml(esc.hoteleria) + '</div>' +
+          '<div class="escapada-card__excursiones"><h4>Excursiones incluidas</h4><ul>' + excItems + '</ul></div>' +
+          '<div class="escapada-card__precios">' +
+            '<div class="precio-item"><span class="precio-item__label">Precio público p/p en base a HAB DBL</span><span class="precio-item__valor">' + formatoMoneda(esc.precio_publico) + '</span></div>' +
+            '<div class="precio-item"><span class="precio-item__label">Comisión</span><span class="precio-item__valor">' + esc.comision_pct + '%</span></div>' +
+            '<div class="escapada-card__neto"><span class="label"><span class="label__principal">Neto agencia</span><span class="label__sub">p/p en base a Hab DBL</span></span><span class="valor">' + formatoMoneda(esc.neto_agencia) + '</span></div>' +
+          '</div>' +
+        '</div>';
+      list.appendChild(card);
+    });
+  }
+
+  function cargarEscapadas() {
+    fetch(ESCAPADAS_URL)
+      .then(function (res) {
+        if (!res.ok) throw new Error("No se pudo cargar " + ESCAPADAS_URL);
+        return res.json();
+      })
+      .then(function (json) {
+        renderEscapadas(json && json.escapadas);
+      })
+      .catch(function (err) {
+        console.error(err);
+      });
+  }
+
   // ===================== MODAL =====================
 
   function setupModal() {
@@ -135,8 +258,6 @@
   }
 
   // ===================== ACCESO AGENCIAS =====================
-
-  var URL_AGENCIAS = "https://danielcadile-eng.github.io/tarifario-campo-base/";
 
   function cargarClavesAgencias() {
     fetch(OFERTAS_URL)
@@ -160,6 +281,10 @@
 
     var abrirModal = function (e) {
       e.preventDefault();
+      if (agenciasDesbloqueado) {
+        document.getElementById("agencias").scrollIntoView({ behavior: "smooth" });
+        return;
+      }
       error.hidden = true;
       form.reset();
       modal.hidden = false;
@@ -177,15 +302,34 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (clavesAgencias.indexOf(claveInput.value) !== -1) {
-        window.location.href = URL_AGENCIAS;
+        cerrarAgenciasModal();
+        desbloquearAgencias();
       } else {
         error.hidden = false;
       }
     });
+
+    document.getElementById("agencias-logout-btn").addEventListener("click", bloquearAgencias);
   }
 
   function cerrarAgenciasModal() {
     document.getElementById("agencias-modal").hidden = true;
+  }
+
+  function desbloquearAgencias(scroll) {
+    agenciasDesbloqueado = true;
+    sessionStorage.setItem(AGENCIAS_SESSION_KEY, "1");
+    var section = document.getElementById("agencias");
+    section.hidden = false;
+    if (data) renderTarifarioAgencias(agenciasFiltroActual);
+    cargarEscapadas();
+    if (scroll !== false) section.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function bloquearAgencias() {
+    agenciasDesbloqueado = false;
+    sessionStorage.removeItem(AGENCIAS_SESSION_KEY);
+    document.getElementById("agencias").hidden = true;
   }
 
   function mostrarDetalle(id) {

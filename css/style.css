@@ -203,6 +203,81 @@ a { color: inherit; }
 .precio-item__label { font-size: 11px; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.03em; }
 .precio-item__valor { font-size: 15px; font-weight: 700; color: var(--texto); }
 .precio-item__valor.promo { color: var(--naranja); }
+.precio-item__valor.neto { color: var(--azul-oscuro); }
+
+.excursion-card__neto {
+  margin-top: 8px;
+  background: var(--crema-osc);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.excursion-card__neto .label { font-size: 12px; font-weight: 700; color: var(--naranja); }
+.excursion-card__neto .valor { font-size: 18px; font-weight: 800; color: var(--azul-oscuro); }
+
+/* ---------- Sección agencias ---------- */
+
+.agencias-section { border-top: 3px solid var(--naranja); }
+.agencias-section__badge {
+  display: inline-block;
+  background: var(--naranja);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+.agencias-section__subtitulo { font-size: 26px; color: var(--azul-oscuro); text-transform: uppercase; margin: 36px 0 16px; }
+.agencias-logout-btn {
+  display: block;
+  margin: 32px auto 0;
+  border: 1px solid var(--borde);
+  background: white;
+  color: var(--texto-suave);
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.agencias-logout-btn:hover { border-color: var(--naranja); color: var(--naranja); }
+
+/* ---------- Escapadas ---------- */
+
+.escapadas-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+
+.escapada-card {
+  background: white;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.escapada-card__header { background: var(--azul-oscuro); color: white; padding: 20px 24px 16px; }
+.escapada-card__nombre { font-family: 'Bebas Neue', Georgia, serif; font-size: 26px; letter-spacing: 0.03em; margin: 0 0 6px; }
+.escapada-card__duracion { font-size: 14px; color: var(--celeste); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+.escapada-card__body { padding: 20px 24px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+.escapada-card__hoteleria { font-size: 13px; color: var(--texto-suave); }
+.escapada-card__hoteleria strong { color: var(--texto); }
+
+.escapada-card__excursiones h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--naranja); margin: 0 0 8px; }
+.escapada-card__excursiones ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.escapada-card__excursiones li { background: var(--crema-osc); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600; color: var(--azul-oscuro); }
+
+.escapada-card__precios { margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--borde); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.escapada-card__neto { grid-column: 1 / -1; background: var(--crema-osc); border-radius: 8px; padding: 10px 14px; text-align: center; display: flex; flex-direction: column; gap: 4px; }
+.escapada-card__neto .label { font-weight: 700; color: var(--naranja); display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.escapada-card__neto .label__principal { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.escapada-card__neto .label__sub { font-size: 11px; font-weight: 600; color: var(--texto-suave); text-transform: none; }
+.escapada-card__neto .valor { font-size: 22px; font-weight: 800; color: var(--azul-oscuro); }
 
 /* ---------- Modal de detalle ---------- */
 
