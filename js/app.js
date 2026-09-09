@@ -2,10 +2,12 @@
   "use strict";
 
   var DATA_URL = "data/excursiones.json";
+  var OFERTAS_URL = "data/ofertas.json";
 
   var data = null;
   var excursionesById = {};
   var propuestaActual = null;
+  var clavesAgencias = [];
 
   document.addEventListener("DOMContentLoaded", init);
 
@@ -16,6 +18,7 @@
     setupFilters();
     setupArmadorForm();
     cargarDatos();
+    cargarClavesAgencias();
   }
 
   // ===================== CARGA DE DATOS =====================
@@ -133,8 +136,21 @@
 
   // ===================== ACCESO AGENCIAS =====================
 
-  var CLAVE_AGENCIAS = "sarmiento231";
   var URL_AGENCIAS = "https://danielcadile-eng.github.io/tarifario-campo-base/";
+
+  function cargarClavesAgencias() {
+    fetch(OFERTAS_URL)
+      .then(function (res) {
+        if (!res.ok) throw new Error("No se pudo cargar " + OFERTAS_URL);
+        return res.json();
+      })
+      .then(function (json) {
+        clavesAgencias = (json && json.claves_agencias) || [];
+      })
+      .catch(function (err) {
+        console.error(err);
+      });
+  }
 
   function setupAgenciasModal() {
     var modal = document.getElementById("agencias-modal");
@@ -160,7 +176,7 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      if (claveInput.value === CLAVE_AGENCIAS) {
+      if (clavesAgencias.indexOf(claveInput.value) !== -1) {
         window.location.href = URL_AGENCIAS;
       } else {
         error.hidden = false;
