@@ -67,6 +67,20 @@ a { color: inherit; }
 }
 .main-nav a:hover, .main-nav a.active { color: white; border-bottom-color: white; }
 
+.acceso-agencias-btn {
+  display: inline-block;
+  flex-shrink: 0;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1.5px solid white;
+  border-radius: 20px;
+  padding: 7px 18px;
+  transition: background 0.15s, color 0.15s;
+}
+.acceso-agencias-btn:hover { background: white; color: var(--naranja); }
+
 /* ---------- Hero ---------- */
 
 .hero {

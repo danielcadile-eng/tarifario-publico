@@ -142,13 +142,15 @@
     var claveInput = document.getElementById("agencias-clave");
     var error = document.getElementById("agencias-error");
 
-    document.getElementById("acceso-agencias-link").addEventListener("click", function (e) {
+    var abrirModal = function (e) {
       e.preventDefault();
       error.hidden = true;
       form.reset();
       modal.hidden = false;
       claveInput.focus();
-    });
+    };
+    document.getElementById("acceso-agencias-link").addEventListener("click", abrirModal);
+    document.getElementById("acceso-agencias-btn").addEventListener("click", abrirModal);
 
     document.getElementById("agencias-modal-backdrop").addEventListener("click", cerrarAgenciasModal);
     document.getElementById("agencias-modal-close").addEventListener("click", cerrarAgenciasModal);
