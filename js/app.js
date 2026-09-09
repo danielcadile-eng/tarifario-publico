@@ -33,7 +33,7 @@
   // ===================== CARGA DE DATOS =====================
 
   function cargarDatos() {
-    fetch(DATA_URL)
+    fetch(DATA_URL, { cache: "no-store" })
       .then(function (res) {
         if (!res.ok) throw new Error("No se pudo cargar " + DATA_URL);
         return res.json();
@@ -231,7 +231,7 @@
   }
 
   function cargarEscapadas() {
-    fetch(ESCAPADAS_URL)
+    fetch(ESCAPADAS_URL, { cache: "no-store" })
       .then(function (res) {
         if (!res.ok) throw new Error("No se pudo cargar " + ESCAPADAS_URL);
         return res.json();
@@ -260,7 +260,7 @@
   // ===================== ACCESO AGENCIAS =====================
 
   function cargarClavesAgencias() {
-    fetch(OFERTAS_URL)
+    fetch(OFERTAS_URL, { cache: "no-store" })
       .then(function (res) {
         if (!res.ok) throw new Error("No se pudo cargar " + OFERTAS_URL);
         return res.json();
@@ -282,7 +282,9 @@
     var abrirModal = function (e) {
       e.preventDefault();
       if (agenciasDesbloqueado) {
-        document.getElementById("agencias").scrollIntoView({ behavior: "smooth" });
+        var section = document.getElementById("agencias");
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+        else console.error("No se encontró #agencias en la página.");
         return;
       }
       error.hidden = true;
@@ -309,7 +311,8 @@
       }
     });
 
-    document.getElementById("agencias-logout-btn").addEventListener("click", bloquearAgencias);
+    var logoutBtn = document.getElementById("agencias-logout-btn");
+    if (logoutBtn) logoutBtn.addEventListener("click", bloquearAgencias);
   }
 
   function cerrarAgenciasModal() {
@@ -320,6 +323,10 @@
     agenciasDesbloqueado = true;
     sessionStorage.setItem(AGENCIAS_SESSION_KEY, "1");
     var section = document.getElementById("agencias");
+    if (!section) {
+      console.error("No se encontró #agencias en la página; no se puede mostrar el tarifario de agencias.");
+      return;
+    }
     section.hidden = false;
     if (data) renderTarifarioAgencias(agenciasFiltroActual);
     cargarEscapadas();
@@ -329,7 +336,8 @@
   function bloquearAgencias() {
     agenciasDesbloqueado = false;
     sessionStorage.removeItem(AGENCIAS_SESSION_KEY);
-    document.getElementById("agencias").hidden = true;
+    var section = document.getElementById("agencias");
+    if (section) section.hidden = true;
   }
 
   function mostrarDetalle(id) {
