@@ -12,6 +12,7 @@
   function init() {
     document.getElementById("anio").textContent = new Date().getFullYear();
     setupModal();
+    setupAgenciasModal();
     setupFilters();
     setupArmadorForm();
     cargarDatos();
@@ -128,6 +129,45 @@
 
   function cerrarModal() {
     document.getElementById("detalle-modal").hidden = true;
+  }
+
+  // ===================== ACCESO AGENCIAS =====================
+
+  var CLAVE_AGENCIAS = "sarmiento231";
+  var URL_AGENCIAS = "https://danielcadile-eng.github.io/tarifario-campo-base/";
+
+  function setupAgenciasModal() {
+    var modal = document.getElementById("agencias-modal");
+    var form = document.getElementById("agencias-form");
+    var claveInput = document.getElementById("agencias-clave");
+    var error = document.getElementById("agencias-error");
+
+    document.getElementById("acceso-agencias-link").addEventListener("click", function (e) {
+      e.preventDefault();
+      error.hidden = true;
+      form.reset();
+      modal.hidden = false;
+      claveInput.focus();
+    });
+
+    document.getElementById("agencias-modal-backdrop").addEventListener("click", cerrarAgenciasModal);
+    document.getElementById("agencias-modal-close").addEventListener("click", cerrarAgenciasModal);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !modal.hidden) cerrarAgenciasModal();
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (claveInput.value === CLAVE_AGENCIAS) {
+        window.location.href = URL_AGENCIAS;
+      } else {
+        error.hidden = false;
+      }
+    });
+  }
+
+  function cerrarAgenciasModal() {
+    document.getElementById("agencias-modal").hidden = true;
   }
 
   function mostrarDetalle(id) {

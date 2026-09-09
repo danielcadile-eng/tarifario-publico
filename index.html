@@ -92,12 +92,31 @@
 
   <footer class="site-footer">
     <p>&copy; <span id="anio"></span> Campo Base — Red Feliz Viaje · Peatonal Sarmiento 231, Mendoza</p>
+    <a href="#" id="acceso-agencias-link" class="acceso-agencias-link">Acceso agencias</a>
   </footer>
 
   <!-- Modal de detalle -->
   <div id="detalle-modal" class="modal" hidden>
     <div class="modal__backdrop" id="modal-backdrop"></div>
     <div class="modal__content" id="modal-content"></div>
+  </div>
+
+  <!-- Modal de acceso agencias -->
+  <div id="agencias-modal" class="modal" hidden>
+    <div class="modal__backdrop" id="agencias-modal-backdrop"></div>
+    <div class="modal__content modal__content--login">
+      <button type="button" class="modal-close" id="agencias-modal-close" aria-label="Cerrar">&times;</button>
+      <h3>Acceso agencias</h3>
+      <p>Ingresá la clave para acceder al tarifario interno.</p>
+      <form id="agencias-form" class="login-form">
+        <div class="field">
+          <label for="agencias-clave">Clave</label>
+          <input type="password" id="agencias-clave" autocomplete="off" required>
+        </div>
+        <p id="agencias-error" class="login-form__error" hidden>Clave incorrecta. Intentá de nuevo.</p>
+        <button type="submit">Ingresar</button>
+      </form>
+    </div>
   </div>
 
   <script src="js/app.js"></script>
